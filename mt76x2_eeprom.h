@@ -149,7 +149,7 @@ void mt76x2_get_rate_power(struct mt76x2_dev *dev, struct mt76_rate_power *t);
 void mt76x2_get_power_info(struct mt76x2_dev *dev,
 			   struct mt76x2_tx_power_info *t);
 int mt76x2_get_temp_comp(struct mt76x2_dev *dev, struct mt76x2_temp_comp *t);
-bool mt76x2_ext_pa_enabled(struct mt76x2_dev *dev, enum nl80211_band band);
+bool mt76x2_ext_pa_enabled(struct mt76x2_dev *dev, enum ieee80211_band band);
 void mt76x2_read_rx_gain(struct mt76x2_dev *dev);
 
 static inline bool
@@ -172,7 +172,7 @@ mt76x2_has_ext_lna(struct mt76x2_dev *dev)
 {
 	u32 val = mt76x2_eeprom_get(dev, MT_EE_NIC_CONF_1);
 
-	if (dev->mt76.chandef.chan->band == NL80211_BAND_2GHZ)
+	if (dev->mt76.chandef.chan->band == IEEE80211_BAND_2GHZ)
 		return val & MT_EE_NIC_CONF_1_LNA_EXT_2G;
 	else
 		return val & MT_EE_NIC_CONF_1_LNA_EXT_5G;

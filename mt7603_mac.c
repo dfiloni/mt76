@@ -55,7 +55,7 @@ void mt7603_mac_set_timing(struct mt7603_dev *dev)
 			 FIELD_PREP(MT_TIMEOUT_VAL_CCA, offset);
 	int sifs;
 
-	if (dev->mt76.chandef.chan->band == NL80211_BAND_5GHZ)
+	if (dev->mt76.chandef.chan->band == IEEE80211_BAND_5GHZ)
 		sifs = 16;
 	else
 		sifs = 10;

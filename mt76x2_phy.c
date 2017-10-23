@@ -191,7 +191,7 @@ mt76x2_phy_tssi_init_cal(struct mt76x2_dev *dev)
 	if (mt76x2_channel_silent(dev))
 		return false;
 
-	if (chan->band == NL80211_BAND_2GHZ)
+	if (chan->band == IEEE80211_BAND_2GHZ)
 		flag |= BIT(0);
 
 	if (mt76x2_ext_pa_enabled(dev, chan->band))
@@ -206,7 +206,7 @@ static void
 mt76x2_phy_channel_calibrate(struct mt76x2_dev *dev, bool mac_stopped)
 {
 	struct ieee80211_channel *chan = dev->mt76.chandef.chan;
-	bool is_5ghz = chan->band == NL80211_BAND_5GHZ;
+	bool is_5ghz = chan->band == IEEE80211_BAND_5GHZ;
 
 	if (dev->cal.channel_cal_done)
 		return;
@@ -238,12 +238,12 @@ mt76x2_phy_channel_calibrate(struct mt76x2_dev *dev, bool mac_stopped)
 }
 
 static void
-mt76x2_phy_set_txpower_regs(struct mt76x2_dev *dev, enum nl80211_band band)
+mt76x2_phy_set_txpower_regs(struct mt76x2_dev *dev, enum ieee80211_band band)
 {
 	u32 pa_mode[2];
 	u32 pa_mode_adj;
 
-	if (band == NL80211_BAND_2GHZ) {
+	if (band == IEEE80211_BAND_2GHZ) {
 		pa_mode[0] = 0x010055ff;
 		pa_mode[1] = 0x00550055;
 
@@ -286,7 +286,7 @@ mt76x2_phy_set_txpower_regs(struct mt76x2_dev *dev, enum nl80211_band band)
 		mt76_wr(dev, MT_TX1_RF_GAIN_CORR, val);
 		mt76_wr(dev, MT_TX_ALC_CFG_4, 0x00001818);
 	} else {
-		if (band == NL80211_BAND_2GHZ) {
+		if (band == IEEE80211_BAND_2GHZ) {
 			u32 val = 0x0f3c3c3c;
 
 			mt76_wr(dev, MT_TX0_RF_GAIN_CORR, val);
@@ -301,7 +301,7 @@ mt76x2_phy_set_txpower_regs(struct mt76x2_dev *dev, enum nl80211_band band)
 }
 
 static void
-mt76x2_configure_tx_delay(struct mt76x2_dev *dev, enum nl80211_band band, u8 bw)
+mt76x2_configure_tx_delay(struct mt76x2_dev *dev, enum ieee80211_band band, u8 bw)
 {
 	u32 cfg0, cfg1;
 
@@ -349,11 +349,11 @@ static void
 mt76x2_phy_set_band(struct mt76x2_dev *dev, int band, bool primary_upper)
 {
 	switch (band) {
-	case NL80211_BAND_2GHZ:
+	case IEEE80211_BAND_2GHZ:
 		mt76_set(dev, MT_TX_BAND_CFG, MT_TX_BAND_CFG_2G);
 		mt76_clear(dev, MT_TX_BAND_CFG, MT_TX_BAND_CFG_5G);
 		break;
-	case NL80211_BAND_5GHZ:
+	case IEEE80211_BAND_5GHZ:
 		mt76_clear(dev, MT_TX_BAND_CFG, MT_TX_BAND_CFG_2G);
 		mt76_set(dev, MT_TX_BAND_CFG, MT_TX_BAND_CFG_5G);
 		break;
@@ -465,7 +465,7 @@ int mt76x2_phy_set_channel(struct mt76x2_dev *dev,
 {
 	struct ieee80211_channel *chan = chandef->chan;
 	bool scan = test_bit(MT76_SCANNING, &dev->mt76.state);
-	enum nl80211_band band = chan->band;
+	enum ieee80211_band band = chan->band;
 	u8 channel;
 
 	u32 ext_cca_chan[4] = {

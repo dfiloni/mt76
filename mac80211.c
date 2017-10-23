@@ -16,14 +16,14 @@
 #include "mt76.h"
 
 #define CHAN2G(_idx, _freq) {			\
-	.band = NL80211_BAND_2GHZ,		\
+	.band = IEEE80211_BAND_2GHZ,		\
 	.center_freq = (_freq),			\
 	.hw_value = (_idx),			\
 	.max_power = 30,			\
 }
 
 #define CHAN5G(_idx, _freq) {			\
-	.band = NL80211_BAND_5GHZ,		\
+	.band = IEEE80211_BAND_5GHZ,		\
 	.center_freq = (_freq),			\
 	.hw_value = (_idx),			\
 	.max_power = 30,			\
@@ -148,7 +148,7 @@ static int
 mt76_init_sband_2g(struct mt76_dev *dev, struct ieee80211_rate *rates,
 		   int n_rates)
 {
-	dev->hw->wiphy->bands[NL80211_BAND_2GHZ] = &dev->sband_2g.sband;
+	dev->hw->wiphy->bands[IEEE80211_BAND_2GHZ] = &dev->sband_2g.sband;
 
 	return mt76_init_sband(dev, &dev->sband_2g,
 			       mt76_channels_2ghz,
@@ -160,7 +160,7 @@ static int
 mt76_init_sband_5g(struct mt76_dev *dev, struct ieee80211_rate *rates,
 		   int n_rates, bool vht)
 {
-	dev->hw->wiphy->bands[NL80211_BAND_5GHZ] = &dev->sband_5g.sband;
+	dev->hw->wiphy->bands[IEEE80211_BAND_5GHZ] = &dev->sband_5g.sband;
 
 	return mt76_init_sband(dev, &dev->sband_5g,
 			       mt76_channels_5ghz,
@@ -220,7 +220,6 @@ int mt76_register_device(struct mt76_dev *dev, bool vht,
 	wiphy->features |= NL80211_FEATURE_ACTIVE_MONITOR;
 
 	hw->txq_data_size = sizeof(struct mt76_txq);
-	hw->max_tx_fragments = 16;
 
 	ieee80211_hw_set(hw, SIGNAL_DBM);
 	ieee80211_hw_set(hw, PS_NULLFUNC_STACK);
@@ -230,8 +229,6 @@ int mt76_register_device(struct mt76_dev *dev, bool vht,
 	ieee80211_hw_set(hw, SUPPORT_FAST_XMIT);
 	ieee80211_hw_set(hw, SUPPORTS_CLONED_SKBS);
 	ieee80211_hw_set(hw, SUPPORTS_AMSDU_IN_AMPDU);
-	ieee80211_hw_set(hw, TX_AMSDU);
-	ieee80211_hw_set(hw, TX_FRAG_LIST);
 	ieee80211_hw_set(hw, MFP_CAPABLE);
 
 	wiphy->flags |= WIPHY_FLAG_IBSS_RSN;
@@ -249,8 +246,8 @@ int mt76_register_device(struct mt76_dev *dev, bool vht,
 	}
 
 	wiphy_read_of_freq_limits(dev->hw->wiphy);
-	mt76_check_sband(dev, NL80211_BAND_2GHZ);
-	mt76_check_sband(dev, NL80211_BAND_5GHZ);
+	mt76_check_sband(dev, IEEE80211_BAND_2GHZ);
+	mt76_check_sband(dev, IEEE80211_BAND_5GHZ);
 
 	return ieee80211_register_hw(hw);
 }
@@ -342,5 +339,5 @@ void mt76_rx_complete(struct mt76_dev *dev, enum mt76_rxq_id q)
 	struct sk_buff *skb;
 
 	while ((skb = __skb_dequeue(&dev->rx_skb[q])) != NULL)
-		ieee80211_rx_napi(dev->hw, NULL, skb, &dev->napi[q]);
+		ieee80211_rx_napi(dev->hw, skb, &dev->napi[q]);
 }

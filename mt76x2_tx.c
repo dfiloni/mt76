@@ -80,9 +80,9 @@ s8 mt76x2_tx_get_max_txpwr_adj(struct mt76x2_dev *dev,
 	} else if (rate->flags & IEEE80211_TX_RC_MCS) {
 		max_txpwr = dev->rate_power.ht[rate->idx & 0xf];
 	} else {
-		enum nl80211_band band = dev->mt76.chandef.chan->band;
+		enum ieee80211_band band = dev->mt76.chandef.chan->band;
 
-		if (band == NL80211_BAND_2GHZ) {
+		if (band == IEEE80211_BAND_2GHZ) {
 			const struct ieee80211_rate *r;
 			struct wiphy *wiphy = mt76_hw(dev)->wiphy;
 			struct mt76_rate_power *rp = &dev->rate_power;

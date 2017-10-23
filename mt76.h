@@ -298,7 +298,7 @@ mt76_channel_state(struct mt76_dev *dev, struct ieee80211_channel *c)
 	struct mt76_sband *msband;
 	int idx;
 
-	if (c->band == NL80211_BAND_2GHZ)
+	if (c->band == IEEE80211_BAND_2GHZ)
 		msband = &dev->sband_2g;
 	else
 		msband = &dev->sband_5g;
