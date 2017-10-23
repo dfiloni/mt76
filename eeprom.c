@@ -97,7 +97,6 @@ mt76_eeprom_override(struct mt76_dev *dev)
 			 dev->macaddr);
 	}
 }
-EXPORT_SYMBOL_GPL(mt76_eeprom_override);
 
 int
 mt76_eeprom_init(struct mt76_dev *dev, int len)

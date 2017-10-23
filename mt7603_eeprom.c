@@ -176,7 +176,5 @@ int mt7603_eeprom_init(struct mt7603_dev *dev)
 	memcpy(dev->mt76.macaddr, dev->mt76.eeprom.data + MT_EE_MAC_ADDR,
 	       ETH_ALEN);
 
-	mt76_eeprom_override(&dev->mt76);
-
 	return 0;
 }
