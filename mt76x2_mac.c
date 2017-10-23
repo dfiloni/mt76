@@ -46,7 +46,7 @@ mt76x2_mac_process_rate(struct ieee80211_rx_status *status, u16 rate)
 	case MT_PHY_TYPE_CCK:
 		if (idx >= 8) {
 			idx -= 8;
-			status->enc_flags |= RX_ENC_FLAG_SHORTPRE;
+			status->flag |= RX_FLAG_SHORTPRE;
 		}
 
 		if (idx >= 4)
@@ -55,16 +55,16 @@ mt76x2_mac_process_rate(struct ieee80211_rx_status *status, u16 rate)
 		status->rate_idx = idx;
 		return;
 	case MT_PHY_TYPE_HT_GF:
-		status->enc_flags |= RX_ENC_FLAG_HT_GF;
+		status->flag |= RX_FLAG_HT_GF;
 		/* fall through */
 	case MT_PHY_TYPE_HT:
-		status->encoding = RX_ENC_HT;
+		status->flag |= RX_FLAG_HT;
 		status->rate_idx = idx;
 		break;
 	case MT_PHY_TYPE_VHT:
-		status->encoding = RX_ENC_VHT;
+		status->flag |= RX_FLAG_VHT;
 		status->rate_idx = FIELD_GET(MT_RATE_INDEX_VHT_IDX, idx);
-		status->nss = FIELD_GET(MT_RATE_INDEX_VHT_NSS, idx) + 1;
+		status->vht_nss = FIELD_GET(MT_RATE_INDEX_VHT_NSS, idx) + 1;
 		break;
 	default:
 		WARN_ON(1);
@@ -72,22 +72,22 @@ mt76x2_mac_process_rate(struct ieee80211_rx_status *status, u16 rate)
 	}
 
 	if (rate & MT_RXWI_RATE_LDPC)
-		status->enc_flags |= RX_ENC_FLAG_LDPC;
+		status->flag |= RX_FLAG_LDPC;
 
 	if (rate & MT_RXWI_RATE_SGI)
-		status->enc_flags |= RX_ENC_FLAG_SHORT_GI;
+		status->flag |= RX_FLAG_SHORT_GI;
 
 	if (rate & MT_RXWI_RATE_STBC)
-		status->enc_flags |= 1 << RX_ENC_FLAG_STBC_SHIFT;
+		status->flag |= 1 << RX_FLAG_STBC_SHIFT;
 
 	switch (FIELD_GET(MT_RXWI_RATE_BW, rate)) {
 	case MT_PHY_BW_20:
 		break;
 	case MT_PHY_BW_40:
-		status->bw = RATE_INFO_BW_40;
+		status->flag |= RX_FLAG_40MHZ;
 		break;
 	case MT_PHY_BW_80:
-		status->bw = RATE_INFO_BW_80;
+		status->vht_flag |= RX_VHT_FLAG_80MHZ;
 		break;
 	default:
 		break;
